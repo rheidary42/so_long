@@ -11,20 +11,26 @@ BOLD    := \033[1m
 # --- config ---
 NAME := so_long
 HEADER := so_long.h
-CFLAGS := -Wall -Wextra -Werror -g
-LDFLAGS := -Lminilibx-linux -lmlx -lXext -lX11 -lm -lbsd
+CFLAGS := -g -I. -I./libs/minilibx-linux
+# -Wall -Wextra -Werror
+LDFLAGS := -L./libs/minilibx-linux -lmlx -lXext -lX11 -lm -lbsd
 
-LIBFT = libft/libft.a
-FT_PRINTF = ft_printf/libftprintf.a
+LIBFT = libs/libft/libft.a
+FT_PRINTF = libs/ft_printf/libftprintf.a
 
-SRC = main.c\
+SRC = 	main.c \
+		src/map_validation/map_validation.c \
+		src/map_validation/flood_fill.c \
+		src/xpm_handling/xpm_init.c \
+		src/helpers/helper1.c\
+		src/game_logic/hooks.c\
 
 OBJS := $(SRC:.c=.o)
 
 all: $(NAME)
 
 $(NAME): $(LIBFT) $(FT_PRINTF) $(OBJS)
-	@cc $(SRC) $(LIBFT) $(FT_PRINTF) -o $(NAME) $(LDFLAGS)
+	@cc $(CFLAGS) $(OBJS) $(LIBFT) $(FT_PRINTF) -o $(NAME) $(LDFLAGS)
 	@echo "$(GREEN)╔═══════════════════════════════╗$(RESET)"
 	@echo "$(GREEN)║   $(ORANGE)🎉  executable $(YELLOW)created 🎉$(GREEN)   ║$(RESET)"
 	@echo "$(GREEN)╚═══════════════════════════════╝$(RESET)"
@@ -35,12 +41,12 @@ $(NAME): $(LIBFT) $(FT_PRINTF) $(OBJS)
 # --- libraries ---
 
 $(LIBFT):
-	@make -sC libft
+	@make -sC libs/libft
 	@echo "$(GREEN)╔═══════════════════════════════╗$(RESET)"
 	@echo "$(GREEN)║   $(ORANGE)✅  libft.a $(YELLOW)   created ✅$(GREEN)   ║$(RESET)"	
 
 $(FT_PRINTF):
-	@make -sC ft_printf
+	@make -sC libs/ft_printf
 	@echo "$(GREEN)║   $(ORANGE)✅  printf.a $(YELLOW)  created ✅$(GREEN)   ║$(RESET)"
 	@echo "$(GREEN)╚═══════════════════════════════╝$(RESET)"
 
@@ -49,8 +55,8 @@ $(FT_PRINTF):
 
 c:
 	@rm -f $(OBJS)
-	@make clean -sC libft
-	@make clean -sC ft_printf
+	@make clean -sC libs/libft
+	@make clean -sC libs/ft_printf
 	@echo "$(RED)╔═══════════════════════════════╗$(RESET)"
 	@echo "$(RED)║   $(RED) 💀  objects removed  💀$(RED)    ║$(RESET)"
 	@echo "$(RED)║  $(RED)💀 libft objects removed 💀$(RED)  ║$(RESET)"
@@ -60,11 +66,11 @@ c:
 
 f:
 	@rm -f $(OBJS)
-	@make clean -sC libft
-	@make clean -sC ft_printf
+	@make clean -sC libs/libft
+	@make clean -sC libs/ft_printf
 	@rm -f $(NAME)
-	@make fclean -sC libft
-	@make fclean -sC ft_printf
+	@make fclean -sC libs/libft
+	@make fclean -sC libs/ft_printf
 	@echo "$(RED)╔═══════════════════════════════╗$(RESET)"
 	@echo "$(RED)║   $(RED) 💀  objects removed  💀$(RED)    ║$(RESET)"
 	@echo "$(RED)║  $(RED)💀 libft objects removed 💀$(RED)  ║$(RESET)"
